@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>__main.qml</file>
+        <file>CellDelegate.qml</file>
+        <file>CellView.qml</file>
+        <file>ResizableColumnHeader.qml</file>
+        <file>CellEditor.qml</file>
+    </qresource>
+</RCC>
