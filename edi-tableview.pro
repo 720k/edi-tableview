@@ -14,7 +14,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     TableModel.cpp \
-    __main.cpp
+    __main.cpp \
+    Variable.cpp
 
 RESOURCES += qml.qrc
 
@@ -30,4 +31,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    TableModel.h
+    TableModel.h \
+    Variable.h \
+    MyType.h

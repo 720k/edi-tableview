@@ -1,9 +1,12 @@
 <RCC>
     <qresource prefix="/">
         <file>__main.qml</file>
-        <file>CellDelegate.qml</file>
         <file>CellView.qml</file>
         <file>ResizableColumnHeader.qml</file>
         <file>CellEditor.qml</file>
+        <file>CellDisplay.qml</file>
+        <file>HeaderDelegate.qml</file>
+        <file>Global.js</file>
+        <file>CellDisplayText.qml</file>
     </qresource>
 </RCC>

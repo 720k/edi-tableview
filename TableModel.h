@@ -2,6 +2,7 @@
 #define TABLEMODEL_H
 
 #include <QAbstractTableModel>
+class Variable;
 
 class TableModel : public QAbstractTableModel
 {
@@ -20,7 +21,7 @@ public:
     QVariant                data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QVariant                headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray>  roleNames() const override;
-    enum                    Roles {CellDataRole = Qt::UserRole+1};
+    enum                    Roles {CellDataRole = Qt::UserRole+1, CellTypeRole,CellFlagsRole,CellDomainRole};
     // EDITING
     bool                    setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     Qt::ItemFlags           flags(const QModelIndex &index) const override;
@@ -40,7 +41,8 @@ private:
     void                    setColumnNames(QStringList columnNames);
     void                    setRowNames(QStringList rowNames);
 
-    QVector< QPair<QString,QVariant>> m_data;
+//    QVector< QPair<QString,QVariant>> m_data;
+    QList<Variable*>           m_variables;
     QStringList             m_columnNames;
     QStringList             m_rowNames;
 };

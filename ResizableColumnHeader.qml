@@ -11,7 +11,7 @@ ListView {
 
     orientation: ListView.Horizontal
     clip: true
-    delegate: CellDelegate {
+    delegate: HeaderDelegate {
         id: thedelegate
         width: root.len[index]
         height: root.height

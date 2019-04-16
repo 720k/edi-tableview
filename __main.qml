@@ -1,10 +1,12 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
-import App.Class 0.1 as Class
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.5
+import App.Class 0.1 as Class
+import "Global.js" as Global
 
 Window {
+    id: root
     visible: true
     width: 640
     height: 400
@@ -17,6 +19,14 @@ Window {
             Layout.fillHeight: true
             Layout.fillWidth: true
             model:  tableModel
+        }
+        CellView {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            model:  tableModel
+            delegate: CellDisplayText {
+                value: model.cellData
+            }
         }
         ColumnLayout {
             Layout.fillHeight: true
@@ -35,4 +45,5 @@ Window {
     Class.TableModel {
         id: tableModel
     }
+    Component.onCompleted: Global.mainWindow = root
 }

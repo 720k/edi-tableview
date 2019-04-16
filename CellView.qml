@@ -1,12 +1,15 @@
 import QtQuick 2.12
 import QtQuick.Window 2.11
-import App.Class 0.1 as Class
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.5
+import App.Class 0.1 as Class
 
 GridLayout {
     id: root
     property Class.TableModel model
+    property bool   readOnly : false
+    property bool   interactive : true
+    property alias  delegate : table.delegate
     rows: 2
     columns: 2
     // 1
@@ -15,6 +18,7 @@ GridLayout {
         width: rowHeader.width
         height:columnHeader.height
         color: "#EEEDA1"
+        visible: model.count
     }
     ResizableColumnHeader {             // COLUMN HEADER
         id: columnHeader
@@ -31,11 +35,11 @@ GridLayout {
     ListView {                          // ROW HEADER
         id: rowHeader
         Layout.fillHeight:  true
-        width: 100
+        width: 50
         spacing: 1
         clip:true
         model: root.model.rowNames
-        delegate: CellDelegate { text: "<b>"+modelData+"</b>"; color:"#eec" }
+        delegate: HeaderDelegate { width: rowHeader.width; text: modelData; horizontalAlignment: Text.AlignRight }
         contentY:  table.contentY
         interactive: false
     }
@@ -49,13 +53,22 @@ GridLayout {
         columnWidthProvider: columnHeader.columnWidthProvider
         rowHeightProvider: function (column) { return  30 }
         model:root.model
-        delegate: CellDelegate {
+        delegate: CellDisplay {
             id:cell
-            text : cellData
-            onClicked: inPlaceEditor.edit(cell, function onAccepted(value) {cellData = value})
+            value: model.cellData
+            type: model.cellType
+            readOnly: root.interactive ? cellFlags & Class.Variable.ReadOnly : true
+            hasDomain: cellFlags & Class.Variable.DomainList
+            domain: model.cellDomain
+            onClicked: if (!readOnly) inPlaceEditor.edit(cell, model.cellType, onAccepted)
+            function onAccepted(value) { model.cellData = value}
         }
         ScrollBar.horizontal: ScrollBar { orientation: Qt.Horizontal }
         ScrollBar.vertical: ScrollBar { }
-        CellEditor {id: inPlaceEditor;  z:10 }
+        CellEditor {
+          id: inPlaceEditor
+          z:10
+          enabled: !root.readOnly
+        }
     }
 }

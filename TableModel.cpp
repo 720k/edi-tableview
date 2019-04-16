@@ -1,18 +1,29 @@
 #include "TableModel.h"
+#include "Variable.h"
 #include <QDebug>
+#include <QColor>
 
 void TableModel::testData() {
     beginResetModel();
     m_columnNames.clear();
     m_rowNames.clear();
-    m_columnNames << "Name" << "Value";
-    m_rowNames << "1" << "2" << "3" << "4";
-    m_data = {
-    {"hello","world"},
-    {"think","twice"},
-    {"before","speaking"},
-    {"love","cats"},
+    qDeleteAll(m_variables);
+    m_variables.clear();
+    m_variables = {
+        new Variable{"alfa","value1","/"},
+        new Variable{"beta","a simple value","/"},
+        new Variable{"beta.2","a R/O value","/",QVariantList(), Variable::ReadOnly},
+        new Variable{"gamma",1.0,"/"},
+        new Variable{"delta",true,"/"},
+        new Variable{"teta",false,"/",QVariantList(), Variable::ReadOnly},
+        new Variable{"omega",-500,"/"},
+        new Variable{"ChromaLeft",QColor("red"),"/"},
+        new Variable{"ChromaCenter",QColor("green"),"/", QVariantList(),Variable::ReadOnly},
+        new Variable{"ChromaRight",QColor("blue"),"/"},
+        new Variable{"Float [ ]",2.22,"/",QVariantList() << 1.11 << 2.22 << 3.33, Variable::DomainList},
     };
+    m_columnNames << "Name" << "Value";
+    for (int i=0; i< m_variables.count(); ++i)        m_rowNames << QString::number(i);
     endResetModel();
     emit columnNamesChanged(m_columnNames);
     emit rowNamesChanged(m_rowNames);
@@ -24,7 +35,8 @@ void TableModel::clear()
     beginResetModel();
     m_columnNames.clear();
     m_rowNames.clear();
-    m_data.clear();
+    qDeleteAll(m_variables);
+    m_variables.clear();
     endResetModel();
     emit columnNamesChanged(m_columnNames);
     emit rowNamesChanged(m_rowNames);
@@ -37,7 +49,7 @@ TableModel::TableModel(QObject *parent) : QAbstractTableModel (parent)  {
 
 int TableModel::rowCount(const QModelIndex &parent) const   { Q_UNUSED(parent)
     if (parent.isValid())   return 0;
-    return m_data.count();
+    return m_variables.count();
 }
 
 int TableModel::columnCount(const QModelIndex &parent) const    {   Q_UNUSED(parent)
@@ -47,9 +59,15 @@ int TableModel::columnCount(const QModelIndex &parent) const    {   Q_UNUSED(par
 
 QVariant TableModel::data(const QModelIndex &index, int role) const {
     QVariant result;
-    if (!index.isValid() || !indexInRange(index) || role != CellDataRole) return result;
+    if (!index.isValid() || !indexInRange(index)) return result;
     switch (role) {
-        case CellDataRole: result = index.column() == 0  ? m_data.value(index.row()).first : m_data.value(index.row()).second;
+        case CellDataRole: result = index.column() == 0  ?  m_variables.at(index.row())->name() : m_variables.at(index.row())->value();
+            break;
+        case CellTypeRole: result = index.column() == 0  ?  QMetaType::QString : m_variables.at(index.row())->type();
+            break;
+        case CellFlagsRole: result = index.column() == 0  ?  Variable::ReadOnly : m_variables.at(index.row())->flags();
+            break;
+        case CellDomainRole: result = index.column() == 0  ?  QVariant() : m_variables.at(index.row())->domain();
             break;
         default:
             break;
@@ -68,7 +86,10 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
 
 QHash<int, QByteArray> TableModel::roleNames() const    {
     return {
-        {CellDataRole, "cellData"},
+        {CellDataRole,  "cellData"},
+        {CellTypeRole,  "cellType"},
+        {CellFlagsRole, "cellFlags"},
+        {CellDomainRole,"cellDomain"}
     };
 }
 
@@ -76,8 +97,9 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
     if (!index.isValid() || !indexInRange(index)) return false;
     switch (role) {
         case CellDataRole:
-             if (index.column()== 0)    m_data[index.row()].first = value.toString();
-             else                       m_data[index.row()].second = value;
+                qDebug() << "setDATA" << value;
+             if (index.column()== 0)    m_variables[index.row()]->setName(value.toString());
+             else                       m_variables[index.row()]->setValue(value);
             break;
         default:
             return false;
