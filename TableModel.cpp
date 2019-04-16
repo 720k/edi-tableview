@@ -97,7 +97,6 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
     if (!index.isValid() || !indexInRange(index)) return false;
     switch (role) {
         case CellDataRole:
-                qDebug() << "setDATA" << value;
              if (index.column()== 0)    m_variables[index.row()]->setName(value.toString());
              else                       m_variables[index.row()]->setValue(value);
             break;
