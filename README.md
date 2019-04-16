@@ -1,2 +1,3 @@
 # edi-tableview
-messing up with QtQuick control 2 TableView, adding resizable columns and cell editor
+QtQuick control 2 TableView with Resizable Column Header and custom Cell Editor
+![Alt text](screenshot.png?raw=true "Title")
