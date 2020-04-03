@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>__main.qml</file>
+        <file>CellView.qml</file>
+        <file>ResizableColumnHeader.qml</file>
+        <file>HeaderDelegate.qml</file>
+        <file>RoundRect.qml</file>
+        <file>delegate/CellColor.qml</file>
+        <file>delegate/CellNumber.qml</file>
+        <file>delegate/CellBool.qml</file>
+        <file>delegate/CellText.qml</file>
+        <file>delegate/CellList.qml</file>
+        <file>delegate/CellBase.qml</file>
+        <file>delegate/CellBaseEditor.qml</file>
+        <file>delegate/CellPathEditor.qml</file>
+        <file>delegate/CellBase.js</file>
+        <file>delegate/CellNumberEditor.qml</file>
+        <file>delegate/CellColorEditor.qml</file>
+        <file>delegate/CellBackground.qml</file>
+        <file>delegate/CellTextEditor.qml</file>
+        <file>Utils.js</file>
+        <file>delegate/CellDelegate.qml</file>
+    </qresource>
+</RCC>

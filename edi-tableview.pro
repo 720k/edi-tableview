@@ -1,5 +1,18 @@
 QT += quick
-CONFIG += c++11
+CONFIG += c++17
+
+CONFIG(debug, debug|release) {
+    message(DEBUG MODE)
+    CONFIG+=qml_debug
+} else {
+    message(RELEASE MODE)
+}
+
+# app.setWindowIcon(QIcon(QT_ICON_PATH)); // iconless on taskbar? not anymore.
+QID=$$[QT_INSTALL_DATA]
+QT_ICON= $$section(QID, /, 0, -3)/QtIcon.png
+QT_ICON_STR = '\\"$${QT_ICON}\\"'
+DEFINES += QT_ICON_PATH=\"$${QT_ICON_STR}\"
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -13,11 +26,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    TableModel.cpp \
-    __main.cpp \
-    Variable.cpp
+    source/cpp/Property.cpp \
+    source/cpp/TableModel.cpp \
+    source/cpp/__main.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += source/qtquick/qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -31,6 +44,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    TableModel.h \
-    Variable.h \
-    MyType.h
+    source/cpp/Property.h \
+    source/cpp/TableModel.h \
+    source/cpp/MyType.h
+
+DISTFILES += \
+    README.md
